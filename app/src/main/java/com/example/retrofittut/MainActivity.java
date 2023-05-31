@@ -2,11 +2,13 @@ package com.example.retrofittut;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
+import com.example.retrofittut.adapter.CountryAdatper;
 import com.example.retrofittut.model.Result;
 import com.example.retrofittut.model.Country;
 import com.example.retrofittut.service.GetCountryDataService;
@@ -19,14 +21,19 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    ArrayList<Country> countries;
+    ArrayList<Country> countries =  new ArrayList<>();
+
+    RecyclerView recyclerView;
+    CountryAdatper countryAdatper ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
          GetCountries();
+
 
     }
 
@@ -42,11 +49,14 @@ public class MainActivity extends AppCompatActivity {
 
                 assert result != null;
                 countries =  (ArrayList<Country>) result.getResult();
+
                     for(Country c : countries){
                         Log.i("TAG"  , "" + c.getName());
                         Log.d(TAG, "onResponse: Hello");
 
                 }
+                    ViewData();
+
 
             }
 
@@ -56,8 +66,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         return countries;
+
+    }
+
+    private void ViewData() {
+
+
+        countryAdatper =  new CountryAdatper(this);
+        countryAdatper.setCountries(countries);
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setAdapter(countryAdatper);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+
     }
 
 
